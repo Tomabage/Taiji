@@ -1,75 +1,86 @@
-let html = document.querySelector("#html");
+let content = document.querySelector("#content");
+let circle = document.querySelector("#circle");
 let style = document.querySelector("#style");
-let string = `
-/* 你好，我叫小周
-接下来我来演示一下我的前端功底
-首先准备一个div
+
+let string = `/* 你好，我叫小周，
+* 接下来我要演示我的前端功底
+* 我将会画一个太极图案
 */
-#div1{
-    border:1px solid red;
-    width:200px;
-    height:200px;
+/* 首先画一个圆 */
+#circle {
+    border: 1px solid red;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
 }
-/* 接下来我把div变成一个太极图
-第一步，将div变成一个圆
-*/
-#div1{
-    border-radius:50%;
-    box-shadow: 0 0 3px rgba(0,0,0,0.5);
-    border:none;
-}
-/* 太极图由两种颜色组成，一黑一白，白色为阳，黑色为阴*/
-#div1{
+/* 加上阴阳两极 */
+#circle {
+    background: rgb(255,255,255);
     background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgba(0,0,0,1) 50%, rgba(0,0,0,1) 100%);
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    border: none;
 }
-/* 第二步，在圆内放入两个小球
-*/
-#div1::before {
-    width: 100px;
-    height: 100px;
+/* 画上圆内的小圆 */
+#circle::before {
+    border: 1px solid red;
+    position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    background: #000;
-    border-radius: 50%;
     background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 25%, rgba(0,0,0,1) 25%, rgba(0,0,0,1) 100%);
+    border-radius: 50%;
 }
-#div1::after{
-    width:100px;
-    height:100px;
-    bottom:0;
-    left:50%;
-    transform:translateX(-50%);
-    background:#fff;
-    border-radius:50%;
+#circle::after {
+    border: 1px solid blue;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(255,255,255,1) 25%, rgba(255,255,255,1) 100%, rgba(0,0,0,1) 100%);
+    border-radius: 50%;
 }
-/* 这样就完成了一个太极图的制作*/
+/* 去掉边框 */
+#circle::before {
+    border: none;
+}
+#circle::after {
+    border: none;
+}
+/* 最后让太极动起来吧 */
+@keyframes rot {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+#circle {
+    animation: rot 3s linear infinite;
+}
 `;
-// string = string.replace(/\n/g, "<br>");
-let string2 = "";
+
+let html = "";
+
 let n = 0;
-// html.innerHTML = string.substring(0, n + 1);
-let step = () => {
+
+let showContent = () => {
   setTimeout(() => {
     if (string[n] === "\n") {
-      // 如果是回车不照搬
-      string2 += "<br>";
+      html += "<br>";
     } else if (string[n] === " ") {
-      string2 += "&nbsp";
+      html += "&nbsp;";
     } else {
-      // 如果不是回车就照搬
-      string2 += string[n];
+      html += string[n];
     }
-    html.innerHTML = string2;
+    content.innerHTML = html;
     style.innerHTML = string.substring(0, n);
-    window.scrollTo(0, 9999);
-    html.scrollTo(0, 9999);
-    if (n < string.length - 1) {
-      // 如果n不是最后一个就继续
-      n = n + 1;
-      step();
+    n++;
+    window.scrollTo(0, document.body.scrollHeight);
+    content.scrollTo(0, content.scrollHeight);
+    if (n < string.length) {
+      showContent();
     }
   }, 10);
 };
-step();
+showContent();
